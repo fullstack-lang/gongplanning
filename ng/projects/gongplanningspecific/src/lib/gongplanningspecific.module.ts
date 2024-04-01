@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { GongplanningspecificComponent } from './gongplanningspecific.component';
+import { GongplanningcomponentComponent } from './gongplanningcomponent/gongplanningcomponent.component';
 
 
 
 @NgModule({
   declarations: [
-    GongplanningspecificComponent
+    GongplanningcomponentComponent
   ],
   imports: [
   ],
   exports: [
-    GongplanningspecificComponent
+    GongplanningcomponentComponent
   ]
 })
 export class GongplanningspecificModule { }
