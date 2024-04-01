@@ -4,6 +4,7 @@ import { ProjectAPI } from './project-api'
 import { FrontRepo } from './front-repo.service';
 
 // insertion point for imports
+import { Task } from './task'
 
 // usefull for managing pointer ID values that can be nullable
 import { NullInt64 } from './null-int64'
@@ -20,6 +21,7 @@ export class Project {
 	Name: string = ""
 
 	// insertion point for pointers and slices of pointers declarations
+	Tasks: Array<Task> = []
 }
 
 export function CopyProjectToProjectAPI(project: Project, projectAPI: ProjectAPI) {
@@ -34,6 +36,11 @@ export function CopyProjectToProjectAPI(project: Project, projectAPI: ProjectAPI
 	// insertion point for pointer fields encoding
 
 	// insertion point for slice of pointers fields encoding
+	projectAPI.ProjectPointersEncoding.Tasks = []
+	for (let _task of project.Tasks) {
+		projectAPI.ProjectPointersEncoding.Tasks.push(_task.ID)
+	}
+
 }
 
 // CopyProjectAPIToProject update basic, pointers and slice of pointers fields of project
@@ -52,4 +59,11 @@ export function CopyProjectAPIToProject(projectAPI: ProjectAPI, project: Project
 	// insertion point for pointer fields encoding
 
 	// insertion point for slice of pointers fields encoding
+	project.Tasks = new Array<Task>()
+	for (let _id of projectAPI.ProjectPointersEncoding.Tasks) {
+		let _task = frontRepo.map_ID_Task.get(_id)
+		if (_task != undefined) {
+			project.Tasks.push(_task!)
+		}
+	}
 }

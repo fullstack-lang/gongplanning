@@ -27,3 +27,4 @@ export * from './lib/task.service'
 
 
 export * from './lib/DependencyType'
+export * from './lib/StackName'

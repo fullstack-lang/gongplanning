@@ -12,9 +12,10 @@ import * as gongtable from 'gongtable'
 export class AppComponent implements OnInit {
 
   default = 'Gongplanning Data/Model'
-  view = this.default
+  gongplanning = "Gongplanning"
+  view = this.gongplanning
 
-  views: string[] = [this.default];
+  views: string[] = [this.gongplanning, this.default];
 
   scrollStyle = {
     'overflow- x': 'auto',

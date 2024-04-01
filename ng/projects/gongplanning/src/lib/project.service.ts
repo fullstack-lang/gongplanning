@@ -17,6 +17,7 @@ import { Project, CopyProjectToProjectAPI } from './project'
 import { FrontRepo, FrontRepoService } from './front-repo.service';
 
 // insertion point for imports
+import { TaskAPI } from './task-api'
 
 @Injectable({
   providedIn: 'root'

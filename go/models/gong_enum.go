@@ -70,16 +70,114 @@ func (dependencytype DependencyType) CodeValues() (res []string) {
 	return
 }
 
+// Utility function for StackName
+// if enum values are string, it is stored with the value
+// if enum values are int, they are stored with the code of the value
+func (stackname StackName) ToString() (res string) {
+
+	// migration of former implementation of enum
+	switch stackname {
+	// insertion code per enum code
+	case StackNameDefault:
+		res = "gongplanning-default"
+	case StackNameTreeAtTheLeft:
+		res = "gongplanning-tree-left"
+	case StackNameSVGAtTheCenter:
+		res = "gongplanning-svg-center"
+	case StackNameFormAtTheRight:
+		res = "gongplanning-form-right"
+	}
+	return
+}
+
+func (stackname *StackName) FromString(input string) (err error) {
+
+	switch input {
+	// insertion code per enum code
+	case "gongplanning-default":
+		*stackname = StackNameDefault
+	case "gongplanning-tree-left":
+		*stackname = StackNameTreeAtTheLeft
+	case "gongplanning-svg-center":
+		*stackname = StackNameSVGAtTheCenter
+	case "gongplanning-form-right":
+		*stackname = StackNameFormAtTheRight
+	default:
+		return errUnkownEnum
+	}
+	return
+}
+
+func (stackname *StackName) FromCodeString(input string) (err error) {
+
+	switch input {
+	// insertion code per enum code
+	case "StackNameDefault":
+		*stackname = StackNameDefault
+	case "StackNameTreeAtTheLeft":
+		*stackname = StackNameTreeAtTheLeft
+	case "StackNameSVGAtTheCenter":
+		*stackname = StackNameSVGAtTheCenter
+	case "StackNameFormAtTheRight":
+		*stackname = StackNameFormAtTheRight
+	default:
+		return errUnkownEnum
+	}
+	return
+}
+
+func (stackname *StackName) ToCodeString() (res string) {
+
+	switch *stackname {
+	// insertion code per enum code
+	case StackNameDefault:
+		res = "StackNameDefault"
+	case StackNameTreeAtTheLeft:
+		res = "StackNameTreeAtTheLeft"
+	case StackNameSVGAtTheCenter:
+		res = "StackNameSVGAtTheCenter"
+	case StackNameFormAtTheRight:
+		res = "StackNameFormAtTheRight"
+	}
+	return
+}
+
+func (stackname StackName) Codes() (res []string) {
+
+	res = make([]string, 0)
+
+	// insertion code per enum code
+	res = append(res, "StackNameDefault")
+	res = append(res, "StackNameTreeAtTheLeft")
+	res = append(res, "StackNameSVGAtTheCenter")
+	res = append(res, "StackNameFormAtTheRight")
+
+	return
+}
+
+func (stackname StackName) CodeValues() (res []string) {
+
+	res = make([]string, 0)
+
+	// insertion code per enum code
+	res = append(res, "gongplanning-default")
+	res = append(res, "gongplanning-tree-left")
+	res = append(res, "gongplanning-svg-center")
+	res = append(res, "gongplanning-form-right")
+
+	return
+}
+
 // end of insertion point for enum utility functions
 
 type GongstructEnumStringField interface {
-	string | DependencyType
+	string | DependencyType | StackName
 	Codes() []string
 	CodeValues() []string
 }
 
 type PointerToGongstructEnumStringField interface {
-	*DependencyType
+	*DependencyType | *StackName
 	FromCodeString(input string) (err error)
 }
 

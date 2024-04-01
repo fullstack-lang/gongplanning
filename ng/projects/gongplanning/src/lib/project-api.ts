@@ -1,4 +1,5 @@
 // insertion point for imports
+import { TaskAPI } from './task-api'
 
 // usefull for managing pointer ID values that can be nullable
 import { NullInt64 } from './null-int64'
@@ -21,4 +22,5 @@ export class ProjectAPI {
 
 export class ProjectPointersEncoding {
 	// insertion point for pointers and slices of pointers encoding fields
+	Tasks: number[] = []
 }
