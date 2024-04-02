@@ -5,8 +5,13 @@ import (
 	"log"
 	"strconv"
 
+	gongplanning_models "github.com/fullstack-lang/gongplanning/go/models"
 	gongplanning_stack "github.com/fullstack-lang/gongplanning/go/stack"
 	gongplanning_static "github.com/fullstack-lang/gongplanning/go/static"
+
+	gongtree_fullstack "github.com/fullstack-lang/gongtree/go/fullstack"
+
+	gongsvg_fullstack "github.com/fullstack-lang/gongsvg/go/fullstack"
 )
 
 var (
@@ -35,6 +40,12 @@ func main() {
 	// setup stack
 	stack := gongplanning_stack.NewStack(r, "gongplanning", *unmarshallFromCode, *marshallOnCommit, "", *embeddedDiagrams, true)
 	stack.Probe.Refresh()
+
+	// create stacks for diagrammer
+	gongsvgStage, _ := gongsvg_fullstack.NewStackInstance(r, gongplanning_models.StackNameDefault.ToString())
+	gongtreeStage, _ := gongtree_fullstack.NewStackInstance(r, gongplanning_models.StackNameDefault.ToString())
+	_ = gongsvgStage
+	_ = gongtreeStage
 
 	log.Printf("Server ready serve on localhost:" + strconv.Itoa(*port))
 	err := r.Run(":" + strconv.Itoa(*port))

@@ -79,13 +79,7 @@ func (stackname StackName) ToString() (res string) {
 	switch stackname {
 	// insertion code per enum code
 	case StackNameDefault:
-		res = "gongplanning-default"
-	case StackNameTreeAtTheLeft:
-		res = "gongplanning-tree-left"
-	case StackNameSVGAtTheCenter:
-		res = "gongplanning-svg-center"
-	case StackNameFormAtTheRight:
-		res = "gongplanning-form-right"
+		res = "gongplanning"
 	}
 	return
 }
@@ -94,14 +88,8 @@ func (stackname *StackName) FromString(input string) (err error) {
 
 	switch input {
 	// insertion code per enum code
-	case "gongplanning-default":
+	case "gongplanning":
 		*stackname = StackNameDefault
-	case "gongplanning-tree-left":
-		*stackname = StackNameTreeAtTheLeft
-	case "gongplanning-svg-center":
-		*stackname = StackNameSVGAtTheCenter
-	case "gongplanning-form-right":
-		*stackname = StackNameFormAtTheRight
 	default:
 		return errUnkownEnum
 	}
@@ -114,12 +102,6 @@ func (stackname *StackName) FromCodeString(input string) (err error) {
 	// insertion code per enum code
 	case "StackNameDefault":
 		*stackname = StackNameDefault
-	case "StackNameTreeAtTheLeft":
-		*stackname = StackNameTreeAtTheLeft
-	case "StackNameSVGAtTheCenter":
-		*stackname = StackNameSVGAtTheCenter
-	case "StackNameFormAtTheRight":
-		*stackname = StackNameFormAtTheRight
 	default:
 		return errUnkownEnum
 	}
@@ -132,12 +114,6 @@ func (stackname *StackName) ToCodeString() (res string) {
 	// insertion code per enum code
 	case StackNameDefault:
 		res = "StackNameDefault"
-	case StackNameTreeAtTheLeft:
-		res = "StackNameTreeAtTheLeft"
-	case StackNameSVGAtTheCenter:
-		res = "StackNameSVGAtTheCenter"
-	case StackNameFormAtTheRight:
-		res = "StackNameFormAtTheRight"
 	}
 	return
 }
@@ -148,9 +124,6 @@ func (stackname StackName) Codes() (res []string) {
 
 	// insertion code per enum code
 	res = append(res, "StackNameDefault")
-	res = append(res, "StackNameTreeAtTheLeft")
-	res = append(res, "StackNameSVGAtTheCenter")
-	res = append(res, "StackNameFormAtTheRight")
 
 	return
 }
@@ -160,10 +133,7 @@ func (stackname StackName) CodeValues() (res []string) {
 	res = make([]string, 0)
 
 	// insertion code per enum code
-	res = append(res, "gongplanning-default")
-	res = append(res, "gongplanning-tree-left")
-	res = append(res, "gongplanning-svg-center")
-	res = append(res, "gongplanning-form-right")
+	res = append(res, "gongplanning")
 
 	return
 }

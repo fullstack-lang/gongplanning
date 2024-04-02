@@ -25,6 +25,8 @@ export class AppComponent implements OnInit {
   StackName = "gongplanning"
   StackType = gongplanning.StackType
 
+  StackNameForDiagrammer = gongplanning.StackName.StackNameDefault
+
   TableExtraPathEnum = gongtable.TableExtraPathEnum
 
   constructor(

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'lib-gongplanningcomponent',
@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./gongplanningcomponent.component.css']
 })
 export class GongplanningcomponentComponent {
+
+  @Input() GONG__StackPath: string = ""
 
 }
