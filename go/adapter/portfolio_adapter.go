@@ -27,3 +27,38 @@ func (portfolioAdapter *PortfolioAdapter) SetDiagrammer(diagrammer *diagrammer.D
 }
 
 var _ diagrammer.Portfolio = &PortfolioAdapter{}
+
+// AddElementToDiagram implements diagrammer.Portfolio.
+func (portfolioAdapter *PortfolioAdapter) AddElementToDiagram(diagrammer.ModelElementNode) map[diagrammer.ModelElementNode]diagrammer.Shape {
+	panic("unimplemented")
+}
+
+// GeneratesProgeny implements diagrammer.Portfolio.
+func (portfolioAdapter *PortfolioAdapter) GeneratesProgeny() []diagrammer.PortfolioNode {
+	return nil // to be completed
+}
+
+// GetChildren implements diagrammer.Portfolio.
+func (portfolioAdapter *PortfolioAdapter) GetChildren() []diagrammer.PortfolioNode {
+	return nil // to be completed
+}
+
+// GetSelectedPortfolioDiagramNode implements diagrammer.Portfolio.
+func (portfolioAdapter *PortfolioAdapter) GetSelectedPortfolioDiagramNode() diagrammer.PortfolioDiagramNode {
+	panic("unimplemented")
+}
+
+// IsInDrawingMode implements diagrammer.Portfolio.
+func (portfolioAdapter *PortfolioAdapter) IsInDrawingMode() bool {
+	panic("unimplemented")
+}
+
+// IsInSelectionMode implements diagrammer.Portfolio.
+func (portfolioAdapter *PortfolioAdapter) IsInSelectionMode() bool {
+	panic("unimplemented")
+}
+
+// RemoveElementFromDiagram implements diagrammer.Portfolio.
+func (portfolioAdapter *PortfolioAdapter) RemoveElementFromDiagram(diagrammer.ModelElementNode) map[diagrammer.ModelElementNode]diagrammer.Shape {
+	panic("unimplemented")
+}

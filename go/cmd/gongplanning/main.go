@@ -10,6 +10,7 @@ import (
 	gongplanning_static "github.com/fullstack-lang/gongplanning/go/static"
 
 	gongtree_fullstack "github.com/fullstack-lang/gongtree/go/fullstack"
+	gongtree_models "github.com/fullstack-lang/gongtree/go/models"
 
 	gongsvg_fullstack "github.com/fullstack-lang/gongsvg/go/fullstack"
 
@@ -52,10 +53,17 @@ func main() {
 	_ = gongtreeStage
 
 	portfolioAdapter := gongplanning_adapter.NewPortfolioAdapter(gongsvgStage)
-	modelAdapter := gongplanning_adapter.NewModelAdapter(portfolioAdapter)
+	modelAdapter := gongplanning_adapter.NewModelAdapter(portfolioAdapter, stack.Stage)
 
 	diagrammer := diagrammer.NewDiagrammer(modelAdapter, portfolioAdapter, gongtreeStage)
 	portfolioAdapter.SetDiagrammer(diagrammer)
+
+	treeOfModelObjects := (&gongtree_models.Tree{Name: "model"}).Stage(gongtreeStage)
+	diagrammer.FillUpModelTree(treeOfModelObjects)
+
+	treeOfPortfolioObjects := (&gongtree_models.Tree{Name: "portfolio"}).Stage(gongtreeStage)
+	diagrammer.FillUpPortfolioUITree(treeOfPortfolioObjects)
+	diagrammer.CommitTreeStage()
 
 	log.Printf("Server ready serve on localhost:" + strconv.Itoa(*port))
 	err := r.Run(":" + strconv.Itoa(*port))
