@@ -12,6 +12,10 @@ import (
 	gongtree_fullstack "github.com/fullstack-lang/gongtree/go/fullstack"
 
 	gongsvg_fullstack "github.com/fullstack-lang/gongsvg/go/fullstack"
+
+	gongplanning_adapter "github.com/fullstack-lang/gongplanning/go/adapter"
+
+	diagrammer "github.com/fullstack-lang/gongplanning/go/diagrammer"
 )
 
 var (
@@ -46,6 +50,12 @@ func main() {
 	gongtreeStage, _ := gongtree_fullstack.NewStackInstance(r, gongplanning_models.StackNameDefault.ToString())
 	_ = gongsvgStage
 	_ = gongtreeStage
+
+	portfolioAdapter := gongplanning_adapter.NewPortfolioAdapter(gongsvgStage)
+	modelAdapter := gongplanning_adapter.NewModelAdapter(portfolioAdapter)
+
+	diagrammer := diagrammer.NewDiagrammer(modelAdapter, portfolioAdapter, gongtreeStage)
+	portfolioAdapter.SetDiagrammer(diagrammer)
 
 	log.Printf("Server ready serve on localhost:" + strconv.Itoa(*port))
 	err := r.Run(":" + strconv.Itoa(*port))
