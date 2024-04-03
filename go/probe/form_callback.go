@@ -186,6 +186,8 @@ func (projectFormCallback *ProjectFormCallback) OnSave() {
 		// insertion point per field
 		case "Name":
 			FormDivBasicFieldToField(&(project_.Name), formDiv)
+		case "IsExpanded":
+			FormDivBasicFieldToField(&(project_.IsExpanded), formDiv)
 		}
 	}
 

@@ -8,19 +8,69 @@ import (
 
 func NewProjectNode(
 	portfolioAdapter *PortfolioAdapter,
-	gongStruct *gongplanning_models.Project) (gongStructNode *ProjectNode) {
-	gongStructNode = &ProjectNode{
-		ElementNodeBase: ElementNodeBase{portfolioAdapter: portfolioAdapter}}
+	gongplanningStage *gongplanning_models.StageStruct,
+	project *gongplanning_models.Project) (gongStructNode *ProjectNode) {
 
-	gongStructNode.gongStruct = gongStruct
-	return
+	return &ProjectNode{
+		ElementNodeBase:   ElementNodeBase{portfolioAdapter: portfolioAdapter},
+		gongplanningStage: gongplanningStage,
+		project:           project,
+	}
 }
 
 var _ diagrammer.ModelElementNode = &ProjectNode{}
 
 type ProjectNode struct {
 	ElementNodeBase
-	gongStruct *gongplanning_models.Project
+	gongplanningStage *gongplanning_models.StageStruct
+	project           *gongplanning_models.Project
+}
+
+// GenerateProgeny implements diagrammer.ModelElementNode.
+func (p *ProjectNode) GenerateProgeny() []diagrammer.ModelNode {
+	return nil
+}
+
+// GetChildren implements diagrammer.ModelElementNode.
+// Subtle: this method shadows the method (ElementNodeBase).GetChildren of ProjectNode.ElementNodeBase.
+func (p *ProjectNode) GetChildren() []diagrammer.ModelNode {
+	return nil
+}
+
+// GetElement implements diagrammer.ModelElementNode.
+func (p *ProjectNode) GetElement() any {
+	panic("unimplemented")
+}
+
+// GetName implements diagrammer.ModelElementNode.
+func (p *ProjectNode) GetName() string {
+	return p.project.Name
+}
+
+// GetParent implements diagrammer.ModelElementNode.
+// Subtle: this method shadows the method (ElementNodeBase).GetParent of ProjectNode.ElementNodeBase.
+func (p *ProjectNode) GetParent() diagrammer.ModelNode {
+	panic("unimplemented")
+}
+
+// IsExpanded implements diagrammer.ModelElementNode.
+// Subtle: this method shadows the method (ElementNodeBase).IsExpanded of ProjectNode.ElementNodeBase.
+func (p *ProjectNode) IsExpanded() bool {
+	return p.project.IsExpanded
+}
+
+// SetIsExpanded implements diagrammer.ModelElementNode.
+// Subtle: this method shadows the method (ElementNodeBase).SetIsExpanded of ProjectNode.ElementNodeBase.
+func (p *ProjectNode) SetIsExpanded(isExpanded bool) {
+	p.project.IsExpanded = true
+	p.gongplanningStage.Commit()
+
+}
+
+// IsNameEditable implements diagrammer.ModelElementNode.
+// Subtle: this method shadows the method (ElementNodeBase).IsNameEditable of ProjectNode.ElementNodeBase.
+func (p *ProjectNode) IsNameEditable() bool {
+	panic("unimplemented")
 }
 
 // AddToDiagram implements diagrammer.ModelElementNode.
@@ -34,52 +84,7 @@ func (p *ProjectNode) CanBeAddedToDiagram() bool {
 	panic("unimplemented")
 }
 
-// GenerateProgeny implements diagrammer.ModelElementNode.
-func (p *ProjectNode) GenerateProgeny() []diagrammer.ModelNode {
-	panic("unimplemented")
-}
-
-// GetChildren implements diagrammer.ModelElementNode.
-// Subtle: this method shadows the method (ElementNodeBase).GetChildren of ProjectNode.ElementNodeBase.
-func (p *ProjectNode) GetChildren() []diagrammer.ModelNode {
-	panic("unimplemented")
-}
-
-// GetElement implements diagrammer.ModelElementNode.
-func (p *ProjectNode) GetElement() any {
-	panic("unimplemented")
-}
-
-// GetName implements diagrammer.ModelElementNode.
-func (p *ProjectNode) GetName() string {
-	panic("unimplemented")
-}
-
-// GetParent implements diagrammer.ModelElementNode.
-// Subtle: this method shadows the method (ElementNodeBase).GetParent of ProjectNode.ElementNodeBase.
-func (p *ProjectNode) GetParent() diagrammer.ModelNode {
-	panic("unimplemented")
-}
-
-// IsExpanded implements diagrammer.ModelElementNode.
-// Subtle: this method shadows the method (ElementNodeBase).IsExpanded of ProjectNode.ElementNodeBase.
-func (p *ProjectNode) IsExpanded() bool {
-	panic("unimplemented")
-}
-
-// IsNameEditable implements diagrammer.ModelElementNode.
-// Subtle: this method shadows the method (ElementNodeBase).IsNameEditable of ProjectNode.ElementNodeBase.
-func (p *ProjectNode) IsNameEditable() bool {
-	panic("unimplemented")
-}
-
 // RemoveFromDiagram implements diagrammer.ModelElementNode.
 func (p *ProjectNode) RemoveFromDiagram() {
-	panic("unimplemented")
-}
-
-// SetIsExpanded implements diagrammer.ModelElementNode.
-// Subtle: this method shadows the method (ElementNodeBase).SetIsExpanded of ProjectNode.ElementNodeBase.
-func (p *ProjectNode) SetIsExpanded(isExpanded bool) {
 	panic("unimplemented")
 }

@@ -781,7 +781,7 @@ func GetFields[Type Gongstruct]() (res []string) {
 	case Predecessor:
 		res = []string{"Name", "DependencyType", "Task"}
 	case Project:
-		res = []string{"Name", "Tasks"}
+		res = []string{"Name", "Tasks", "IsExpanded"}
 	case Task:
 		res = []string{"Name", "Predecessors"}
 	}
@@ -831,7 +831,7 @@ func GetFieldsFromPointer[Type PointerToGongstruct]() (res []string) {
 	case *Predecessor:
 		res = []string{"Name", "DependencyType", "Task"}
 	case *Project:
-		res = []string{"Name", "Tasks"}
+		res = []string{"Name", "Tasks", "IsExpanded"}
 	case *Task:
 		res = []string{"Name", "Predecessors"}
 	}
@@ -867,6 +867,8 @@ func GetFieldStringValueFromPointer[Type PointerToGongstruct](instance Type, fie
 				}
 				res += __instance__.Name
 			}
+		case "IsExpanded":
+			res = fmt.Sprintf("%t", inferedInstance.IsExpanded)
 		}
 	case *Task:
 		switch fieldName {
@@ -916,6 +918,8 @@ func GetFieldStringValue[Type Gongstruct](instance Type, fieldName string) (res 
 				}
 				res += __instance__.Name
 			}
+		case "IsExpanded":
+			res = fmt.Sprintf("%t", inferedInstance.IsExpanded)
 		}
 	case Task:
 		switch fieldName {

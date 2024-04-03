@@ -8,6 +8,8 @@ type Task struct {
 type Project struct {
 	Name  string
 	Tasks []*Task
+
+	IsExpanded bool
 }
 
 type Predecessor struct {

@@ -64,6 +64,10 @@ type ProjectDB struct {
 
 	// Declation for basic field projectDB.Name
 	Name_Data sql.NullString
+
+	// Declation for basic field projectDB.IsExpanded
+	// provide the sql storage for the boolan
+	IsExpanded_Data sql.NullBool
 	
 	// encoding of pointers
 	// for GORM serialization, it is necessary to embed to Pointer Encoding declaration
@@ -88,6 +92,8 @@ type ProjectWOP struct {
 	// insertion for WOP basic fields
 
 	Name string `xlsx:"1"`
+
+	IsExpanded bool `xlsx:"2"`
 	// insertion for WOP pointer fields
 }
 
@@ -95,6 +101,7 @@ var Project_Fields = []string{
 	// insertion for WOP basic fields
 	"ID",
 	"Name",
+	"IsExpanded",
 }
 
 type BackRepoProjectStruct struct {
@@ -390,6 +397,9 @@ func (projectDB *ProjectDB) CopyBasicFieldsFromProject(project *models.Project) 
 
 	projectDB.Name_Data.String = project.Name
 	projectDB.Name_Data.Valid = true
+
+	projectDB.IsExpanded_Data.Bool = project.IsExpanded
+	projectDB.IsExpanded_Data.Valid = true
 }
 
 // CopyBasicFieldsFromProject_WOP
@@ -398,6 +408,9 @@ func (projectDB *ProjectDB) CopyBasicFieldsFromProject_WOP(project *models.Proje
 
 	projectDB.Name_Data.String = project.Name
 	projectDB.Name_Data.Valid = true
+
+	projectDB.IsExpanded_Data.Bool = project.IsExpanded
+	projectDB.IsExpanded_Data.Valid = true
 }
 
 // CopyBasicFieldsFromProjectWOP
@@ -406,18 +419,23 @@ func (projectDB *ProjectDB) CopyBasicFieldsFromProjectWOP(project *ProjectWOP) {
 
 	projectDB.Name_Data.String = project.Name
 	projectDB.Name_Data.Valid = true
+
+	projectDB.IsExpanded_Data.Bool = project.IsExpanded
+	projectDB.IsExpanded_Data.Valid = true
 }
 
 // CopyBasicFieldsToProject
 func (projectDB *ProjectDB) CopyBasicFieldsToProject(project *models.Project) {
 	// insertion point for checkout of basic fields (back repo to stage)
 	project.Name = projectDB.Name_Data.String
+	project.IsExpanded = projectDB.IsExpanded_Data.Bool
 }
 
 // CopyBasicFieldsToProject_WOP
 func (projectDB *ProjectDB) CopyBasicFieldsToProject_WOP(project *models.Project_WOP) {
 	// insertion point for checkout of basic fields (back repo to stage)
 	project.Name = projectDB.Name_Data.String
+	project.IsExpanded = projectDB.IsExpanded_Data.Bool
 }
 
 // CopyBasicFieldsToProjectWOP
@@ -425,6 +443,7 @@ func (projectDB *ProjectDB) CopyBasicFieldsToProjectWOP(project *ProjectWOP) {
 	project.ID = int(projectDB.ID)
 	// insertion point for checkout of basic fields (back repo to stage)
 	project.Name = projectDB.Name_Data.String
+	project.IsExpanded = projectDB.IsExpanded_Data.Bool
 }
 
 // Backup generates a json file from a slice of all ProjectDB instances in the backrepo

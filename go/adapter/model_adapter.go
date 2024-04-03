@@ -28,6 +28,7 @@ var _ diagrammer.Model = &ModelAdapter{}
 // GenerateProgeny implements diagrammer.Model.
 func (m *ModelAdapter) GenerateProgeny() []diagrammer.ModelNode {
 	projectCategoryNode := NewProjectCategoryNode(m.portfolioAdapter, "Projects", m.gongplanningStage)
+	projectCategoryNode.GenerateProgeny()
 	m.rootNodes = append(m.rootNodes, projectCategoryNode)
 
 	return m.rootNodes

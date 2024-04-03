@@ -18,7 +18,11 @@ func NewProjectCategoryNode(
 	portfolioAdapter *PortfolioAdapter,
 	name string,
 	gongplanningStage *gongplanning_models.StageStruct) *ProjectCategoryNode {
-	return &ProjectCategoryNode{ModelCategoryNodeBase: ModelCategoryNodeBase{portfolioAdapter: portfolioAdapter, Name: name}}
+
+	return &ProjectCategoryNode{
+		ModelCategoryNodeBase: ModelCategoryNodeBase{portfolioAdapter: portfolioAdapter, Name: name},
+		gongplanningStage:     gongplanningStage,
+	}
 }
 
 // GenerateProgeny implements diagrammer.Node.
@@ -27,7 +31,8 @@ func (categoryNode *ProjectCategoryNode) GenerateProgeny() []diagrammer.ModelNod
 	for project := range *gongplanning_models.GetGongstructInstancesSet[gongplanning_models.Project](
 		categoryNode.gongplanningStage) {
 
-		projectNode := NewProjectNode(categoryNode.portfolioAdapter, project)
+		projectNode := NewProjectNode(categoryNode.portfolioAdapter,
+			categoryNode.gongplanningStage, project)
 		projectNode.GenerateProgeny()
 		categoryNode.children = append(categoryNode.children, projectNode)
 	}

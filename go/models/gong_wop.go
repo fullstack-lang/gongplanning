@@ -22,11 +22,13 @@ func (from *Predecessor) CopyBasicFields(to *Predecessor) {
 type Project_WOP struct {
 	// insertion point
 	Name string
+	IsExpanded bool
 }
 
 func (from *Project) CopyBasicFields(to *Project) {
 	// insertion point
 	to.Name = from.Name
+	to.IsExpanded = from.IsExpanded
 }
 
 type Task_WOP struct {
