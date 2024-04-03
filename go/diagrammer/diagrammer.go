@@ -80,7 +80,7 @@ func (diagrammer *Diagrammer) modelNode2ModelTreeNode(modelNode ModelNode, treeS
 	modelTreeNode.IsExpanded = modelNode.IsExpanded()
 
 	if elementNode, ok := modelNode.(ModelElementNode); ok {
-		modelTreeNode.HasCheckboxButton = true
+		modelTreeNode.HasCheckboxButton = elementNode.HasCheckboxButton()
 		modelTreeNode.IsCheckboxDisabled = true
 		diagrammer.map_modelElementNode_treeNode[elementNode] = modelTreeNode
 	}

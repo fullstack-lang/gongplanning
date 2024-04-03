@@ -20,7 +20,7 @@ func (base *ElementNodeBase) IsNameEditable() bool {
 }
 
 func (base *ElementNodeBase) CanBeAddedToDiagram() bool {
-	return true
+	return false
 }
 
 func (base *ElementNodeBase) GetChildren() []diagrammer.ModelNode {

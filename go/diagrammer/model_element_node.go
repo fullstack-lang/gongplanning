@@ -5,6 +5,8 @@ type ModelElementNode interface {
 
 	GetElement() any
 
+	HasCheckboxButton() bool
+
 	// CanBeAddedToDiagram returns true if the model element can be displayed
 	CanBeAddedToDiagram() bool
 	AddToDiagram()
