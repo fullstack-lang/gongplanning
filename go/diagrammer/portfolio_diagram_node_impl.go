@@ -14,7 +14,7 @@ func (portfolioDiagramNodeImpl *PortfolioDiagramNodeImpl) OnAfterUpdate(stage *g
 		map_ModelNode_Shape := portfolioDiagramNodeImpl.portfolioDiagramNode.DisplayDiagram()
 
 		portfolioDiagramNodeImpl.diagrammer.generatePortfolioNodesStatusAndButtons()
-		portfolioDiagramNodeImpl.diagrammer.computeModelNodeStatus(map_ModelNode_Shape)
+		portfolioDiagramNodeImpl.diagrammer.generateModelNodesStatusAndButtons(map_ModelNode_Shape)
 		portfolioDiagramNodeImpl.diagrammer.treeStage.Commit()
 	}
 

@@ -14,6 +14,8 @@ type ProjectCategoryNode struct {
 	gongplanningStage *gongplanning_models.StageStruct
 }
 
+var _ diagrammer.ModelCategoryNode = &ProjectCategoryNode{}
+
 func NewProjectCategoryNode(
 	portfolioAdapter *PortfolioAdapter,
 	name string,
@@ -42,4 +44,8 @@ func (categoryNode *ProjectCategoryNode) GenerateProgeny() []diagrammer.ModelNod
 	})
 
 	return categoryNode.children
+}
+
+func (categoryNode *ProjectCategoryNode) CanAddInstance() bool {
+	return true
 }

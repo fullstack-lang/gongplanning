@@ -69,13 +69,13 @@ func (buttonImpl *PortfolioDiagramNodeButtonImpl) ButtonUpdated(
 		map_ModelNode_Shape := buttonImpl.portfolioDiagramNode.CancelEdit()
 
 		buttonImpl.diagrammer.generatePortfolioNodesStatusAndButtons()
-		buttonImpl.diagrammer.computeModelNodeStatus(map_ModelNode_Shape)
+		buttonImpl.diagrammer.generateModelNodesStatusAndButtons(map_ModelNode_Shape)
 		buttonImpl.treeStage.Commit()
 	case EDIT:
 		map_ModelNode_Shape := buttonImpl.portfolioDiagramNode.DrawDiagram()
 
 		buttonImpl.diagrammer.generatePortfolioNodesStatusAndButtons()
-		buttonImpl.diagrammer.computeModelNodeStatus(map_ModelNode_Shape)
+		buttonImpl.diagrammer.generateModelNodesStatusAndButtons(map_ModelNode_Shape)
 		buttonImpl.treeStage.Commit()
 	case REMOVE:
 		parentTreeNode := buttonImpl.diagrammer.GetPortfiolioNodeFromTreeNode(buttonImpl.portfolioDiagramNode.GetParent())
@@ -95,7 +95,7 @@ func (buttonImpl *PortfolioDiagramNodeButtonImpl) ButtonUpdated(
 
 		// generate empty model tree
 		map_ModelElementNode_Shape := make(map[ModelElementNode]Shape)
-		buttonImpl.diagrammer.computeModelNodeStatus(map_ModelElementNode_Shape)
+		buttonImpl.diagrammer.generateModelNodesStatusAndButtons(map_ModelElementNode_Shape)
 		buttonImpl.treeStage.Commit()
 	case RENAME_CANCEL:
 		buttonImpl.portfolioDiagramNode.SetIsInRenameMode(false)
@@ -113,7 +113,7 @@ func (buttonImpl *PortfolioDiagramNodeButtonImpl) ButtonUpdated(
 		map_ModelNode_Shape := buttonImpl.portfolioDiagramNode.SaveDiagram()
 
 		buttonImpl.diagrammer.generatePortfolioNodesStatusAndButtons()
-		buttonImpl.diagrammer.computeModelNodeStatus(map_ModelNode_Shape)
+		buttonImpl.diagrammer.generateModelNodesStatusAndButtons(map_ModelNode_Shape)
 		buttonImpl.treeStage.Commit()
 
 	}

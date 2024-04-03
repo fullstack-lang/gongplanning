@@ -50,7 +50,7 @@ func (portfolioAdapter *PortfolioAdapter) GetSelectedPortfolioDiagramNode() diag
 
 // IsInDrawingMode implements diagrammer.Portfolio.
 func (portfolioAdapter *PortfolioAdapter) IsInDrawingMode() bool {
-	panic("unimplemented")
+	return false
 }
 
 // IsInSelectionMode implements diagrammer.Portfolio.
