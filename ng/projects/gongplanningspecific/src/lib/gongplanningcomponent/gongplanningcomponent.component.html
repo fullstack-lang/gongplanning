@@ -9,8 +9,28 @@
             </as-split-area>
         </as-split>
     </as-split-area>
-    <as-split-area [size]="80" [maxSize]="100">
+    <as-split-area [size]="60" [maxSize]="100">
         <lib-gongsvg-diagramming [GONG__StackPath]="GONG__StackPath">
         </lib-gongsvg-diagramming>
+    </as-split-area>
+    <as-split-area [size]="20">
+        <as-split direction="vertical">
+            <as-split-area [size]="62">
+
+                <lib-material-form 
+                    [FormName]="FormNames.ModelForm" 
+                    [DataStack]="StacksNames.StackNameDefault+TableExtraPathEnum.StackNamePostFixForTableForMainForm">
+                </lib-material-form>
+
+            </as-split-area>
+            <as-split-area [size]="38">
+
+                <lib-material-form 
+                    [FormName]="FormNames.ShapeForm" 
+                    [DataStack]="StacksNames.StackNameDefault+TableExtraPathEnum.StackNamePostFixForTableForMainForm">
+                </lib-material-form>
+
+            </as-split-area>
+        </as-split>
     </as-split-area>
 </as-split>

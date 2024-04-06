@@ -7,6 +7,9 @@ import { GongsvgspecificModule } from 'gongsvgspecific'
 import { GongtreeModule } from 'gongtree'
 import { GongtreespecificModule } from 'gongtreespecific'
 
+import { GongtableModule } from 'gongtable'
+import { GongtablespecificModule } from 'gongtablespecific'
+
 import { AngularSplitModule } from 'angular-split';
 
 @NgModule({
@@ -18,6 +21,9 @@ import { AngularSplitModule } from 'angular-split';
 
     GongsvgModule,
     GongsvgspecificModule,
+
+    GongtableModule,
+    GongtablespecificModule,
 
     GongtreeModule,
     GongtreespecificModule,

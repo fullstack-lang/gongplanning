@@ -27,4 +27,5 @@ export * from './lib/task.service'
 
 
 export * from './lib/DependencyType'
+export * from './lib/FormNames'
 export * from './lib/StackName'

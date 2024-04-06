@@ -19,6 +19,7 @@ export class Project {
 
 	// insertion point for basic fields declarations
 	Name: string = ""
+	IsExpanded: boolean = false
 
 	// insertion point for pointers and slices of pointers declarations
 	Tasks: Array<Task> = []
@@ -32,6 +33,7 @@ export function CopyProjectToProjectAPI(project: Project, projectAPI: ProjectAPI
 
 	// insertion point for basic fields copy operations
 	projectAPI.Name = project.Name
+	projectAPI.IsExpanded = project.IsExpanded
 
 	// insertion point for pointer fields encoding
 
@@ -55,6 +57,7 @@ export function CopyProjectAPIToProject(projectAPI: ProjectAPI, project: Project
 
 	// insertion point for basic fields copy operations
 	project.Name = projectAPI.Name
+	project.IsExpanded = projectAPI.IsExpanded
 
 	// insertion point for pointer fields encoding
 
