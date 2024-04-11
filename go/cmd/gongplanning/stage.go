@@ -41,15 +41,15 @@ func stageInjection(stage *models.StageStruct) {
 	// Declarations of staged instances of Predecessor
 
 	// Declarations of staged instances of Project
-	__Project__000000_Test := (&models.Project{Name: `Test`}).Stage(stage)
+	__Project__000000_Test2 := (&models.Project{Name: `Test2`}).Stage(stage)
 
 	// Declarations of staged instances of Task
 
 	// Setup of values
 
 	// Project values setup
-	__Project__000000_Test.Name = `Test`
-	__Project__000000_Test.IsExpanded = true
+	__Project__000000_Test2.Name = `Test2`
+	__Project__000000_Test2.IsExpanded = true
 
 	// Setup of pointers
 }

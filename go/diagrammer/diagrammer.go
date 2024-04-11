@@ -90,6 +90,7 @@ func (diagrammer *Diagrammer) modelNode2ModelTreeNode(modelNode ModelNode, treeS
 	if elementNode, ok := modelNode.(ModelElementNode); ok {
 		modelTreeNode.HasCheckboxButton = elementNode.HasCheckboxButton()
 		modelTreeNode.IsCheckboxDisabled = true
+		modelTreeNode.IsNodeClickable = true
 		diagrammer.map_modelElementNode_treeNode[elementNode] = modelTreeNode
 	}
 

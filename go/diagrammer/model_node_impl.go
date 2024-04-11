@@ -1,6 +1,10 @@
 package diagrammer
 
-import gongtree_models "github.com/fullstack-lang/gongtree/go/models"
+import (
+	"log"
+
+	gongtree_models "github.com/fullstack-lang/gongtree/go/models"
+)
 
 type ModelNodeImpl struct {
 	diagrammer *Diagrammer
@@ -18,6 +22,7 @@ func (modelNodeImpl *ModelNodeImpl) OnAfterUpdate(stage *gongtree_models.StageSt
 		// if not, the front node will be in the configuration of the stage node
 		// whatever action the end user performs
 		stagedNode.IsExpanded = frontNode.IsExpanded
+		return
 	}
 
 	if !stagedNode.IsChecked && frontNode.IsChecked {
@@ -30,7 +35,7 @@ func (modelNodeImpl *ModelNodeImpl) OnAfterUpdate(stage *gongtree_models.StageSt
 			modelNodeImpl.diagrammer.generateModelNodesStatusAndButtons(map_ModelNode_Shape)
 			modelNodeImpl.diagrammer.treeStage.Commit()
 		}
-
+		return
 	}
 
 	if stagedNode.IsChecked && !frontNode.IsChecked {
@@ -43,6 +48,9 @@ func (modelNodeImpl *ModelNodeImpl) OnAfterUpdate(stage *gongtree_models.StageSt
 			modelNodeImpl.diagrammer.generateModelNodesStatusAndButtons(map_ModelNode_Shape)
 			modelNodeImpl.diagrammer.treeStage.Commit()
 		}
-
+		return
 	}
+
+	// node has been clicked on
+	log.Println("Node clicked on")
 }
