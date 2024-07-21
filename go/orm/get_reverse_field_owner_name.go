@@ -15,18 +15,8 @@ func GetReverseFieldOwnerName[T models.Gongstruct](
 	switch inst := any(instance).(type) {
 	// insertion point
 	case *models.Predecessor:
-		tmp := GetInstanceDBFromInstance[models.Predecessor, PredecessorDB](
-			stage, backRepo, inst,
-		)
-		_ = tmp
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Predecessor":
-			switch reverseField.Fieldname {
-			}
-		case "Project":
-			switch reverseField.Fieldname {
-			}
 		case "Task":
 			switch reverseField.Fieldname {
 			case "Predecessors":
@@ -37,42 +27,19 @@ func GetReverseFieldOwnerName[T models.Gongstruct](
 		}
 
 	case *models.Project:
-		tmp := GetInstanceDBFromInstance[models.Project, ProjectDB](
-			stage, backRepo, inst,
-		)
-		_ = tmp
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Predecessor":
-			switch reverseField.Fieldname {
-			}
-		case "Project":
-			switch reverseField.Fieldname {
-			}
-		case "Task":
-			switch reverseField.Fieldname {
-			}
 		}
 
 	case *models.Task:
-		tmp := GetInstanceDBFromInstance[models.Task, TaskDB](
-			stage, backRepo, inst,
-		)
-		_ = tmp
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Predecessor":
-			switch reverseField.Fieldname {
-			}
 		case "Project":
 			switch reverseField.Fieldname {
 			case "Tasks":
 				if _project, ok := stage.Project_Tasks_reverseMap[inst]; ok {
 					res = _project.Name
 				}
-			}
-		case "Task":
-			switch reverseField.Fieldname {
 			}
 		}
 
@@ -92,18 +59,8 @@ func GetReverseFieldOwner[T models.Gongstruct](
 	switch inst := any(instance).(type) {
 	// insertion point
 	case *models.Predecessor:
-		tmp := GetInstanceDBFromInstance[models.Predecessor, PredecessorDB](
-			stage, backRepo, inst,
-		)
-		_ = tmp
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Predecessor":
-			switch reverseField.Fieldname {
-			}
-		case "Project":
-			switch reverseField.Fieldname {
-			}
 		case "Task":
 			switch reverseField.Fieldname {
 			case "Predecessors":
@@ -112,40 +69,17 @@ func GetReverseFieldOwner[T models.Gongstruct](
 		}
 
 	case *models.Project:
-		tmp := GetInstanceDBFromInstance[models.Project, ProjectDB](
-			stage, backRepo, inst,
-		)
-		_ = tmp
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Predecessor":
-			switch reverseField.Fieldname {
-			}
-		case "Project":
-			switch reverseField.Fieldname {
-			}
-		case "Task":
-			switch reverseField.Fieldname {
-			}
 		}
 
 	case *models.Task:
-		tmp := GetInstanceDBFromInstance[models.Task, TaskDB](
-			stage, backRepo, inst,
-		)
-		_ = tmp
 		switch reverseField.GongstructName {
 		// insertion point
-		case "Predecessor":
-			switch reverseField.Fieldname {
-			}
 		case "Project":
 			switch reverseField.Fieldname {
 			case "Tasks":
 				res = stage.Project_Tasks_reverseMap[inst]
-			}
-		case "Task":
-			switch reverseField.Fieldname {
 			}
 		}
 

@@ -2,20 +2,55 @@ import { Component, OnInit } from '@angular/core';
 
 import { Observable, combineLatest, timer } from 'rxjs'
 
-import * as gongplanning from 'gongplanning'
-import * as gongtable from 'gongtable'
+// for angular & angular material
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+import { AngularSplitModule } from 'angular-split';
+
+import * as gongplanning from '../../projects/gongplanning/src/public-api'
+
+import { GongplanningspecificComponent } from '../../projects/gongplanningspecific/src/public-api'
+
+import { TreeComponent } from '@vendored_components/github.com/fullstack-lang/gongtree/ng-github.com-fullstack-lang-gongtree/projects/gongtreespecific/src/public-api'
+import { MaterialTableComponent } from '@vendored_components/github.com/fullstack-lang/gongtable/ng-github.com-fullstack-lang-gongtable/projects/gongtablespecific/src/lib/material-table/material-table.component';
+import { MaterialFormComponent } from '@vendored_components/github.com/fullstack-lang/gongtable/ng-github.com-fullstack-lang-gongtable/projects/gongtablespecific/src/lib/material-form/material-form.component';
+import * as gongtable from '@vendored_components/github.com/fullstack-lang/gongtable/ng-github.com-fullstack-lang-gongtable/projects/gongtable/src/public-api';
+import { PanelComponent } from '@vendored_components/github.com/fullstack-lang/gongdoc/ng-github.com-fullstack-lang-gongdoc/projects/gongdocspecific/src/public-api'
+import { GongsvgDiagrammingComponent } from '@vendored_components/github.com/fullstack-lang/gongsvg/ng-github.com-fullstack-lang-gongsvg/projects/gongsvgspecific/src/lib/gongsvg-diagramming/gongsvg-diagramming'
+import { GongplanningcomponentComponent } from "../../projects/gongplanningspecific/src/lib/gongplanningcomponent/gongplanningcomponent.component";
+
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatRadioModule,
+    MatButtonModule,
+    MatIconModule,
+    AngularSplitModule,
+    TreeComponent,
+    MaterialTableComponent,
+    MaterialFormComponent,
+    PanelComponent,
+    GongplanningspecificComponent,
+    GongplanningcomponentComponent
+  ],
+
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
 
-  default = 'Gongplanning Data/Model'
-  gongplanning = "Gongplanning"
+  gongplanning = 'Gongplanning'
+  probe = 'Gongplanning Data/Model'
   view = this.gongplanning
 
-  views: string[] = [this.gongplanning, this.default];
+  views: string[] = [this.gongplanning, this.probe];
 
   scrollStyle = {
     'overflow- x': 'auto',
@@ -25,9 +60,9 @@ export class AppComponent implements OnInit {
   StackName = "gongplanning"
   StackType = gongplanning.StackType
 
-  StackNameForDiagrammer = gongplanning.StackName.StackNameDefault
-
   TableExtraPathEnum = gongtable.TableExtraPathEnum
+
+  StackNameForDiagrammer = gongplanning.StackName.StackNameDefault
 
   constructor(
   ) {

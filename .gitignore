@@ -2,3 +2,5 @@ go/cmd/gongplanning/gongplanning
 __debug_bin*
 *.exe
 .DS_Store
+
+node_modules

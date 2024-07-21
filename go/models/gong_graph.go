@@ -42,7 +42,6 @@ func (stage *StageStruct) IsStagedTask(task *Task) (ok bool) {
 	return
 }
 
-
 // StageBranch stages instance and apply StageBranch on all gongstruct instances that are
 // referenced by pointers or slices of pointers of the instance
 //
@@ -120,7 +119,6 @@ func (stage *StageStruct) StageBranchTask(task *Task) {
 
 }
 
-
 // CopyBranch stages instance and apply CopyBranch on all gongstruct instances that are
 // referenced by pointers or slices of pointers of the instance
 //
@@ -151,7 +149,7 @@ func CopyBranch[Type Gongstruct](from *Type) (to *Type) {
 }
 
 // insertion point for stage branch per struct
-func CopyBranchPredecessor(mapOrigCopy map[any]any, predecessorFrom *Predecessor) (predecessorTo  *Predecessor){
+func CopyBranchPredecessor(mapOrigCopy map[any]any, predecessorFrom *Predecessor) (predecessorTo *Predecessor) {
 
 	// predecessorFrom has already been copied
 	if _predecessorTo, ok := mapOrigCopy[predecessorFrom]; ok {
@@ -173,7 +171,7 @@ func CopyBranchPredecessor(mapOrigCopy map[any]any, predecessorFrom *Predecessor
 	return
 }
 
-func CopyBranchProject(mapOrigCopy map[any]any, projectFrom *Project) (projectTo  *Project){
+func CopyBranchProject(mapOrigCopy map[any]any, projectFrom *Project) (projectTo *Project) {
 
 	// projectFrom has already been copied
 	if _projectTo, ok := mapOrigCopy[projectFrom]; ok {
@@ -189,13 +187,13 @@ func CopyBranchProject(mapOrigCopy map[any]any, projectFrom *Project) (projectTo
 
 	//insertion point for the staging of instances referenced by slice of pointers
 	for _, _task := range projectFrom.Tasks {
-		projectTo.Tasks = append( projectTo.Tasks, CopyBranchTask(mapOrigCopy, _task))
+		projectTo.Tasks = append(projectTo.Tasks, CopyBranchTask(mapOrigCopy, _task))
 	}
 
 	return
 }
 
-func CopyBranchTask(mapOrigCopy map[any]any, taskFrom *Task) (taskTo  *Task){
+func CopyBranchTask(mapOrigCopy map[any]any, taskFrom *Task) (taskTo *Task) {
 
 	// taskFrom has already been copied
 	if _taskTo, ok := mapOrigCopy[taskFrom]; ok {
@@ -211,12 +209,11 @@ func CopyBranchTask(mapOrigCopy map[any]any, taskFrom *Task) (taskTo  *Task){
 
 	//insertion point for the staging of instances referenced by slice of pointers
 	for _, _predecessor := range taskFrom.Predecessors {
-		taskTo.Predecessors = append( taskTo.Predecessors, CopyBranchPredecessor(mapOrigCopy, _predecessor))
+		taskTo.Predecessors = append(taskTo.Predecessors, CopyBranchPredecessor(mapOrigCopy, _predecessor))
 	}
 
 	return
 }
-
 
 // UnstageBranch stages instance and apply UnstageBranch on all gongstruct instances that are
 // referenced by pointers or slices of pointers of the insance
@@ -244,7 +241,7 @@ func UnstageBranch[Type Gongstruct](stage *StageStruct, instance *Type) {
 func (stage *StageStruct) UnstageBranchPredecessor(predecessor *Predecessor) {
 
 	// check if instance is already staged
-	if ! IsStaged(stage, predecessor) {
+	if !IsStaged(stage, predecessor) {
 		return
 	}
 
@@ -262,7 +259,7 @@ func (stage *StageStruct) UnstageBranchPredecessor(predecessor *Predecessor) {
 func (stage *StageStruct) UnstageBranchProject(project *Project) {
 
 	// check if instance is already staged
-	if ! IsStaged(stage, project) {
+	if !IsStaged(stage, project) {
 		return
 	}
 
@@ -280,7 +277,7 @@ func (stage *StageStruct) UnstageBranchProject(project *Project) {
 func (stage *StageStruct) UnstageBranchTask(task *Task) {
 
 	// check if instance is already staged
-	if ! IsStaged(stage, task) {
+	if !IsStaged(stage, task) {
 		return
 	}
 
@@ -294,4 +291,3 @@ func (stage *StageStruct) UnstageBranchTask(task *Task) {
 	}
 
 }
-

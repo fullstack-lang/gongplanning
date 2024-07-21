@@ -346,7 +346,7 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) CheckoutPhaseTwoInstance(b
 func (predecessorDB *PredecessorDB) DecodePointers(backRepo *BackRepoStruct, predecessor *models.Predecessor) {
 
 	// insertion point for checkout of pointer encoding
-	// Task field
+	// Task field, hello here
 	predecessor.Task = nil
 	if predecessorDB.TaskID.Int64 != 0 {
 		predecessor.Task = backRepo.BackRepoTask.Map_TaskDBID_TaskPtr[uint(predecessorDB.TaskID.Int64)]
