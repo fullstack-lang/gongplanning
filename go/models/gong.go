@@ -53,7 +53,6 @@ type StageStruct struct {
 	Predecessors_mapString map[string]*Predecessor
 
 	// insertion point for slice of pointers maps
-
 	OnAfterPredecessorCreateCallback OnAfterCreateInterface[Predecessor]
 	OnAfterPredecessorUpdateCallback OnAfterUpdateInterface[Predecessor]
 	OnAfterPredecessorDeleteCallback OnAfterDeleteInterface[Predecessor]
@@ -459,8 +458,7 @@ func (stage *StageStruct) Unstage() { // insertion point for array nil
 // - navigation between staged instances by going backward association links between gongstruct
 // - full refactoring of Gongstruct identifiers / fields
 type Gongstruct interface {
-	// insertion point for generic types
-	Predecessor | Project | Task
+
 }
 
 type GongtructBasicField interface {
@@ -472,11 +470,10 @@ type GongtructBasicField interface {
 // - navigation between staged instances by going backward association links between gongstruct
 // - full refactoring of Gongstruct identifiers / fields
 type PointerToGongstruct interface {
-	// insertion point for generic types
-	*Predecessor | *Project | *Task
 	GetName() string
 	CommitVoid(*StageStruct)
 	UnstageVoid(stage *StageStruct)
+	comparable
 }
 
 func CompareGongstructByName[T PointerToGongstruct](a, b T) int {
@@ -500,21 +497,11 @@ func GetGongstrucsSorted[T PointerToGongstruct](stage *StageStruct) (sortedSlice
 }
 
 type GongstructSet interface {
-	map[any]any |
-		// insertion point for generic types
-		map[*Predecessor]any |
-		map[*Project]any |
-		map[*Task]any |
-		map[*any]any // because go does not support an extra "|" at the end of type specifications
+	map[any]any
 }
 
 type GongstructMapString interface {
-	map[any]any |
-		// insertion point for generic types
-		map[string]*Predecessor |
-		map[string]*Project |
-		map[string]*Task |
-		map[*any]any // because go does not support an extra "|" at the end of type specifications
+	map[any]any
 }
 
 // GongGetSet returns the set staged GongstructType instances

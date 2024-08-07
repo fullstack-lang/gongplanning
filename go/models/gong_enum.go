@@ -22,10 +22,10 @@ func (dependencytype *DependencyType) FromString(input string) (err error) {
 	// insertion code per enum code
 	case "FS":
 		*dependencytype = FS
+		return
 	default:
 		return errUnkownEnum
 	}
-	return
 }
 
 func (dependencytype *DependencyType) FromCodeString(input string) (err error) {
@@ -92,12 +92,13 @@ func (formnames *FormNames) FromString(input string) (err error) {
 	// insertion code per enum code
 	case "Model Form":
 		*formnames = ModelForm
+		return
 	case "Shape Form":
 		*formnames = ShapeForm
+		return
 	default:
 		return errUnkownEnum
 	}
-	return
 }
 
 func (formnames *FormNames) FromCodeString(input string) (err error) {
@@ -168,10 +169,10 @@ func (stackname *StackName) FromString(input string) (err error) {
 	// insertion code per enum code
 	case "gongplanning":
 		*stackname = StackNameDefault
+		return
 	default:
 		return errUnkownEnum
 	}
-	return
 }
 
 func (stackname *StackName) FromCodeString(input string) (err error) {
@@ -219,13 +220,12 @@ func (stackname StackName) CodeValues() (res []string) {
 // end of insertion point for enum utility functions
 
 type GongstructEnumStringField interface {
-	string | DependencyType | FormNames | StackName
 	Codes() []string
 	CodeValues() []string
+	ToString() string
 }
 
 type PointerToGongstructEnumStringField interface {
-	*DependencyType | *FormNames | *StackName
 	FromCodeString(input string) (err error)
 }
 
