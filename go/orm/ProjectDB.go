@@ -17,6 +17,7 @@ import (
 
 	"github.com/tealeg/xlsx/v3"
 
+	"github.com/fullstack-lang/gongplanning/go/db"
 	"github.com/fullstack-lang/gongplanning/go/models"
 )
 
@@ -68,7 +69,7 @@ type ProjectDB struct {
 	// Declation for basic field projectDB.IsExpanded
 	// provide the sql storage for the boolan
 	IsExpanded_Data sql.NullBool
-	
+
 	// encoding of pointers
 	// for GORM serialization, it is necessary to embed to Pointer Encoding declaration
 	ProjectPointersEncoding
@@ -114,7 +115,7 @@ type BackRepoProjectStruct struct {
 	// stores Project according to their gorm ID
 	Map_ProjectDBID_ProjectPtr map[uint]*models.Project
 
-	db *gorm.DB
+	db db.DBInterface
 
 	stage *models.StageStruct
 }
@@ -124,7 +125,7 @@ func (backRepoProject *BackRepoProjectStruct) GetStage() (stage *models.StageStr
 	return
 }
 
-func (backRepoProject *BackRepoProjectStruct) GetDB() *gorm.DB {
+func (backRepoProject *BackRepoProjectStruct) GetDB() db.DBInterface {
 	return backRepoProject.db
 }
 
@@ -161,9 +162,10 @@ func (backRepoProject *BackRepoProjectStruct) CommitDeleteInstance(id uint) (Err
 
 	// project is not staged anymore, remove projectDB
 	projectDB := backRepoProject.Map_ProjectDBID_ProjectDB[id]
-	query := backRepoProject.db.Unscoped().Delete(&projectDB)
-	if query.Error != nil {
-		log.Fatal(query.Error)
+	db, _ := backRepoProject.db.Unscoped()
+	_, err := db.Delete(&projectDB)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// update stores
@@ -187,9 +189,9 @@ func (backRepoProject *BackRepoProjectStruct) CommitPhaseOneInstance(project *mo
 	var projectDB ProjectDB
 	projectDB.CopyBasicFieldsFromProject(project)
 
-	query := backRepoProject.db.Create(&projectDB)
-	if query.Error != nil {
-		log.Fatal(query.Error)
+	_, err := backRepoProject.db.Create(&projectDB)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// update stores
@@ -239,9 +241,9 @@ func (backRepoProject *BackRepoProjectStruct) CommitPhaseTwoInstance(backRepo *B
 				append(projectDB.ProjectPointersEncoding.Tasks, int(taskAssocEnd_DB.ID))
 		}
 
-		query := backRepoProject.db.Save(&projectDB)
-		if query.Error != nil {
-			log.Fatalln(query.Error)
+		_, err := backRepoProject.db.Save(&projectDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 
 	} else {
@@ -260,9 +262,9 @@ func (backRepoProject *BackRepoProjectStruct) CommitPhaseTwoInstance(backRepo *B
 func (backRepoProject *BackRepoProjectStruct) CheckoutPhaseOne() (Error error) {
 
 	projectDBArray := make([]ProjectDB, 0)
-	query := backRepoProject.db.Find(&projectDBArray)
-	if query.Error != nil {
-		return query.Error
+	_, err := backRepoProject.db.Find(&projectDBArray)
+	if err != nil {
+		return err
 	}
 
 	// list of instances to be removed
@@ -382,7 +384,7 @@ func (backRepo *BackRepoStruct) CheckoutProject(project *models.Project) {
 			var projectDB ProjectDB
 			projectDB.ID = id
 
-			if err := backRepo.BackRepoProject.db.First(&projectDB, id).Error; err != nil {
+			if _, err := backRepo.BackRepoProject.db.First(&projectDB, id); err != nil {
 				log.Fatalln("CheckoutProject : Problem with getting object with id:", id)
 			}
 			backRepo.BackRepoProject.CheckoutPhaseOneInstance(&projectDB)
@@ -541,9 +543,9 @@ func (backRepoProject *BackRepoProjectStruct) rowVisitorProject(row *xlsx.Row) e
 
 		projectDB_ID_atBackupTime := projectDB.ID
 		projectDB.ID = 0
-		query := backRepoProject.db.Create(projectDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		_, err := backRepoProject.db.Create(projectDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 		backRepoProject.Map_ProjectDBID_ProjectDB[projectDB.ID] = projectDB
 		BackRepoProjectid_atBckpTime_newID[projectDB_ID_atBackupTime] = projectDB.ID
@@ -578,9 +580,9 @@ func (backRepoProject *BackRepoProjectStruct) RestorePhaseOne(dirPath string) {
 
 		projectDB_ID_atBackupTime := projectDB.ID
 		projectDB.ID = 0
-		query := backRepoProject.db.Create(projectDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		_, err := backRepoProject.db.Create(projectDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 		backRepoProject.Map_ProjectDBID_ProjectDB[projectDB.ID] = projectDB
 		BackRepoProjectid_atBckpTime_newID[projectDB_ID_atBackupTime] = projectDB.ID
@@ -602,9 +604,10 @@ func (backRepoProject *BackRepoProjectStruct) RestorePhaseTwo() {
 
 		// insertion point for reindexing pointers encoding
 		// update databse with new index encoding
-		query := backRepoProject.db.Model(projectDB).Updates(*projectDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		db, _ := backRepoProject.db.Model(projectDB)
+		_, err := db.Updates(*projectDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 

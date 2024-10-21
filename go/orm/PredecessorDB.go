@@ -17,6 +17,7 @@ import (
 
 	"github.com/tealeg/xlsx/v3"
 
+	"github.com/fullstack-lang/gongplanning/go/db"
 	"github.com/fullstack-lang/gongplanning/go/models"
 )
 
@@ -68,7 +69,7 @@ type PredecessorDB struct {
 
 	// Declation for basic field predecessorDB.DependencyType
 	DependencyType_Data sql.NullString
-	
+
 	// encoding of pointers
 	// for GORM serialization, it is necessary to embed to Pointer Encoding declaration
 	PredecessorPointersEncoding
@@ -114,7 +115,7 @@ type BackRepoPredecessorStruct struct {
 	// stores Predecessor according to their gorm ID
 	Map_PredecessorDBID_PredecessorPtr map[uint]*models.Predecessor
 
-	db *gorm.DB
+	db db.DBInterface
 
 	stage *models.StageStruct
 }
@@ -124,7 +125,7 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) GetStage() (stage *models.
 	return
 }
 
-func (backRepoPredecessor *BackRepoPredecessorStruct) GetDB() *gorm.DB {
+func (backRepoPredecessor *BackRepoPredecessorStruct) GetDB() db.DBInterface {
 	return backRepoPredecessor.db
 }
 
@@ -161,9 +162,10 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) CommitDeleteInstance(id ui
 
 	// predecessor is not staged anymore, remove predecessorDB
 	predecessorDB := backRepoPredecessor.Map_PredecessorDBID_PredecessorDB[id]
-	query := backRepoPredecessor.db.Unscoped().Delete(&predecessorDB)
-	if query.Error != nil {
-		log.Fatal(query.Error)
+	db, _ := backRepoPredecessor.db.Unscoped()
+	_, err := db.Delete(&predecessorDB)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// update stores
@@ -187,9 +189,9 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) CommitPhaseOneInstance(pre
 	var predecessorDB PredecessorDB
 	predecessorDB.CopyBasicFieldsFromPredecessor(predecessor)
 
-	query := backRepoPredecessor.db.Create(&predecessorDB)
-	if query.Error != nil {
-		log.Fatal(query.Error)
+	_, err := backRepoPredecessor.db.Create(&predecessorDB)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// update stores
@@ -233,9 +235,9 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) CommitPhaseTwoInstance(bac
 			predecessorDB.TaskID.Valid = true
 		}
 
-		query := backRepoPredecessor.db.Save(&predecessorDB)
-		if query.Error != nil {
-			log.Fatalln(query.Error)
+		_, err := backRepoPredecessor.db.Save(&predecessorDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 
 	} else {
@@ -254,9 +256,9 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) CommitPhaseTwoInstance(bac
 func (backRepoPredecessor *BackRepoPredecessorStruct) CheckoutPhaseOne() (Error error) {
 
 	predecessorDBArray := make([]PredecessorDB, 0)
-	query := backRepoPredecessor.db.Find(&predecessorDBArray)
-	if query.Error != nil {
-		return query.Error
+	_, err := backRepoPredecessor.db.Find(&predecessorDBArray)
+	if err != nil {
+		return err
 	}
 
 	// list of instances to be removed
@@ -372,7 +374,7 @@ func (backRepo *BackRepoStruct) CheckoutPredecessor(predecessor *models.Predeces
 			var predecessorDB PredecessorDB
 			predecessorDB.ID = id
 
-			if err := backRepo.BackRepoPredecessor.db.First(&predecessorDB, id).Error; err != nil {
+			if _, err := backRepo.BackRepoPredecessor.db.First(&predecessorDB, id); err != nil {
 				log.Fatalln("CheckoutPredecessor : Problem with getting object with id:", id)
 			}
 			backRepo.BackRepoPredecessor.CheckoutPhaseOneInstance(&predecessorDB)
@@ -531,9 +533,9 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) rowVisitorPredecessor(row 
 
 		predecessorDB_ID_atBackupTime := predecessorDB.ID
 		predecessorDB.ID = 0
-		query := backRepoPredecessor.db.Create(predecessorDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		_, err := backRepoPredecessor.db.Create(predecessorDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 		backRepoPredecessor.Map_PredecessorDBID_PredecessorDB[predecessorDB.ID] = predecessorDB
 		BackRepoPredecessorid_atBckpTime_newID[predecessorDB_ID_atBackupTime] = predecessorDB.ID
@@ -568,9 +570,9 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) RestorePhaseOne(dirPath st
 
 		predecessorDB_ID_atBackupTime := predecessorDB.ID
 		predecessorDB.ID = 0
-		query := backRepoPredecessor.db.Create(predecessorDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		_, err := backRepoPredecessor.db.Create(predecessorDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 		backRepoPredecessor.Map_PredecessorDBID_PredecessorDB[predecessorDB.ID] = predecessorDB
 		BackRepoPredecessorid_atBckpTime_newID[predecessorDB_ID_atBackupTime] = predecessorDB.ID
@@ -598,9 +600,10 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) RestorePhaseTwo() {
 		}
 
 		// update databse with new index encoding
-		query := backRepoPredecessor.db.Model(predecessorDB).Updates(*predecessorDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		db, _ := backRepoPredecessor.db.Model(predecessorDB)
+		_, err := db.Updates(*predecessorDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 

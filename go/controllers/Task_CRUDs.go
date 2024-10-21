@@ -70,12 +70,12 @@ func (controller *Controller) GetTasks(c *gin.Context) {
 	}
 	db := backRepo.BackRepoTask.GetDB()
 
-	query := db.Find(&taskDBs)
-	if query.Error != nil {
+	_, err := db.Find(&taskDBs)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -151,12 +151,12 @@ func (controller *Controller) PostTask(c *gin.Context) {
 	taskDB.TaskPointersEncoding = input.TaskPointersEncoding
 	taskDB.CopyBasicFieldsFromTask_WOP(&input.Task_WOP)
 
-	query := db.Create(&taskDB)
-	if query.Error != nil {
+	_, err = db.Create(&taskDB)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -205,7 +205,7 @@ func (controller *Controller) GetTask(c *gin.Context) {
 
 	// Get taskDB in DB
 	var taskDB orm.TaskDB
-	if err := db.First(&taskDB, c.Param("id")).Error; err != nil {
+	if _, err := db.First(&taskDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -264,13 +264,13 @@ func (controller *Controller) UpdateTask(c *gin.Context) {
 	var taskDB orm.TaskDB
 
 	// fetch the task
-	query := db.First(&taskDB, c.Param("id"))
+	_, err := db.First(&taskDB, c.Param("id"))
 
-	if query.Error != nil {
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -279,12 +279,13 @@ func (controller *Controller) UpdateTask(c *gin.Context) {
 	taskDB.CopyBasicFieldsFromTask_WOP(&input.Task_WOP)
 	taskDB.TaskPointersEncoding = input.TaskPointersEncoding
 
-	query = db.Model(&taskDB).Updates(taskDB)
-	if query.Error != nil {
+	db, _ = db.Model(&taskDB)
+	_, err = db.Updates(taskDB)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -343,7 +344,7 @@ func (controller *Controller) DeleteTask(c *gin.Context) {
 
 	// Get model if exist
 	var taskDB orm.TaskDB
-	if err := db.First(&taskDB, c.Param("id")).Error; err != nil {
+	if _, err := db.First(&taskDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -353,7 +354,8 @@ func (controller *Controller) DeleteTask(c *gin.Context) {
 	}
 
 	// with gorm.Model field, default delete is a soft delete. Unscoped() force delete
-	db.Unscoped().Delete(&taskDB)
+	db.Unscoped()
+	db.Delete(&taskDB)
 
 	// get an instance (not staged) from DB instance, and call callback function
 	taskDeleted := new(models.Task)

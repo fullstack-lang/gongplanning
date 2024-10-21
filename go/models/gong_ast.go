@@ -490,15 +490,21 @@ func UnmarshallGongstructStaging(stage *StageStruct, cmap *ast.CommentMap, assig
 									switch gongstructName {
 									// insertion point for identifiers
 									case "Predecessor":
-										instancePredecessor := (&Predecessor{Name: instanceName}).Stage(stage)
+										instancePredecessor := new(Predecessor)
+										instancePredecessor.Name = instanceName
+										instancePredecessor.Stage(stage)
 										instance = any(instancePredecessor)
 										__gong__map_Predecessor[identifier] = instancePredecessor
 									case "Project":
-										instanceProject := (&Project{Name: instanceName}).Stage(stage)
+										instanceProject := new(Project)
+										instanceProject.Name = instanceName
+										instanceProject.Stage(stage)
 										instance = any(instanceProject)
 										__gong__map_Project[identifier] = instanceProject
 									case "Task":
-										instanceTask := (&Task{Name: instanceName}).Stage(stage)
+										instanceTask := new(Task)
+										instanceTask.Name = instanceName
+										instanceTask.Stage(stage)
 										instance = any(instanceTask)
 										__gong__map_Task[identifier] = instanceTask
 									}

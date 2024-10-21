@@ -17,6 +17,7 @@ import (
 
 	"github.com/tealeg/xlsx/v3"
 
+	"github.com/fullstack-lang/gongplanning/go/db"
 	"github.com/fullstack-lang/gongplanning/go/models"
 )
 
@@ -64,7 +65,7 @@ type TaskDB struct {
 
 	// Declation for basic field taskDB.Name
 	Name_Data sql.NullString
-	
+
 	// encoding of pointers
 	// for GORM serialization, it is necessary to embed to Pointer Encoding declaration
 	TaskPointersEncoding
@@ -107,7 +108,7 @@ type BackRepoTaskStruct struct {
 	// stores Task according to their gorm ID
 	Map_TaskDBID_TaskPtr map[uint]*models.Task
 
-	db *gorm.DB
+	db db.DBInterface
 
 	stage *models.StageStruct
 }
@@ -117,7 +118,7 @@ func (backRepoTask *BackRepoTaskStruct) GetStage() (stage *models.StageStruct) {
 	return
 }
 
-func (backRepoTask *BackRepoTaskStruct) GetDB() *gorm.DB {
+func (backRepoTask *BackRepoTaskStruct) GetDB() db.DBInterface {
 	return backRepoTask.db
 }
 
@@ -154,9 +155,10 @@ func (backRepoTask *BackRepoTaskStruct) CommitDeleteInstance(id uint) (Error err
 
 	// task is not staged anymore, remove taskDB
 	taskDB := backRepoTask.Map_TaskDBID_TaskDB[id]
-	query := backRepoTask.db.Unscoped().Delete(&taskDB)
-	if query.Error != nil {
-		log.Fatal(query.Error)
+	db, _ := backRepoTask.db.Unscoped()
+	_, err := db.Delete(&taskDB)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// update stores
@@ -180,9 +182,9 @@ func (backRepoTask *BackRepoTaskStruct) CommitPhaseOneInstance(task *models.Task
 	var taskDB TaskDB
 	taskDB.CopyBasicFieldsFromTask(task)
 
-	query := backRepoTask.db.Create(&taskDB)
-	if query.Error != nil {
-		log.Fatal(query.Error)
+	_, err := backRepoTask.db.Create(&taskDB)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// update stores
@@ -232,9 +234,9 @@ func (backRepoTask *BackRepoTaskStruct) CommitPhaseTwoInstance(backRepo *BackRep
 				append(taskDB.TaskPointersEncoding.Predecessors, int(predecessorAssocEnd_DB.ID))
 		}
 
-		query := backRepoTask.db.Save(&taskDB)
-		if query.Error != nil {
-			log.Fatalln(query.Error)
+		_, err := backRepoTask.db.Save(&taskDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 
 	} else {
@@ -253,9 +255,9 @@ func (backRepoTask *BackRepoTaskStruct) CommitPhaseTwoInstance(backRepo *BackRep
 func (backRepoTask *BackRepoTaskStruct) CheckoutPhaseOne() (Error error) {
 
 	taskDBArray := make([]TaskDB, 0)
-	query := backRepoTask.db.Find(&taskDBArray)
-	if query.Error != nil {
-		return query.Error
+	_, err := backRepoTask.db.Find(&taskDBArray)
+	if err != nil {
+		return err
 	}
 
 	// list of instances to be removed
@@ -375,7 +377,7 @@ func (backRepo *BackRepoStruct) CheckoutTask(task *models.Task) {
 			var taskDB TaskDB
 			taskDB.ID = id
 
-			if err := backRepo.BackRepoTask.db.First(&taskDB, id).Error; err != nil {
+			if _, err := backRepo.BackRepoTask.db.First(&taskDB, id); err != nil {
 				log.Fatalln("CheckoutTask : Problem with getting object with id:", id)
 			}
 			backRepo.BackRepoTask.CheckoutPhaseOneInstance(&taskDB)
@@ -522,9 +524,9 @@ func (backRepoTask *BackRepoTaskStruct) rowVisitorTask(row *xlsx.Row) error {
 
 		taskDB_ID_atBackupTime := taskDB.ID
 		taskDB.ID = 0
-		query := backRepoTask.db.Create(taskDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		_, err := backRepoTask.db.Create(taskDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 		backRepoTask.Map_TaskDBID_TaskDB[taskDB.ID] = taskDB
 		BackRepoTaskid_atBckpTime_newID[taskDB_ID_atBackupTime] = taskDB.ID
@@ -559,9 +561,9 @@ func (backRepoTask *BackRepoTaskStruct) RestorePhaseOne(dirPath string) {
 
 		taskDB_ID_atBackupTime := taskDB.ID
 		taskDB.ID = 0
-		query := backRepoTask.db.Create(taskDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		_, err := backRepoTask.db.Create(taskDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 		backRepoTask.Map_TaskDBID_TaskDB[taskDB.ID] = taskDB
 		BackRepoTaskid_atBckpTime_newID[taskDB_ID_atBackupTime] = taskDB.ID
@@ -583,9 +585,10 @@ func (backRepoTask *BackRepoTaskStruct) RestorePhaseTwo() {
 
 		// insertion point for reindexing pointers encoding
 		// update databse with new index encoding
-		query := backRepoTask.db.Model(taskDB).Updates(*taskDB)
-		if query.Error != nil {
-			log.Fatal(query.Error)
+		db, _ := backRepoTask.db.Model(taskDB)
+		_, err := db.Updates(*taskDB)
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 

@@ -70,12 +70,12 @@ func (controller *Controller) GetPredecessors(c *gin.Context) {
 	}
 	db := backRepo.BackRepoPredecessor.GetDB()
 
-	query := db.Find(&predecessorDBs)
-	if query.Error != nil {
+	_, err := db.Find(&predecessorDBs)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -151,12 +151,12 @@ func (controller *Controller) PostPredecessor(c *gin.Context) {
 	predecessorDB.PredecessorPointersEncoding = input.PredecessorPointersEncoding
 	predecessorDB.CopyBasicFieldsFromPredecessor_WOP(&input.Predecessor_WOP)
 
-	query := db.Create(&predecessorDB)
-	if query.Error != nil {
+	_, err = db.Create(&predecessorDB)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -205,7 +205,7 @@ func (controller *Controller) GetPredecessor(c *gin.Context) {
 
 	// Get predecessorDB in DB
 	var predecessorDB orm.PredecessorDB
-	if err := db.First(&predecessorDB, c.Param("id")).Error; err != nil {
+	if _, err := db.First(&predecessorDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -264,13 +264,13 @@ func (controller *Controller) UpdatePredecessor(c *gin.Context) {
 	var predecessorDB orm.PredecessorDB
 
 	// fetch the predecessor
-	query := db.First(&predecessorDB, c.Param("id"))
+	_, err := db.First(&predecessorDB, c.Param("id"))
 
-	if query.Error != nil {
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -279,12 +279,13 @@ func (controller *Controller) UpdatePredecessor(c *gin.Context) {
 	predecessorDB.CopyBasicFieldsFromPredecessor_WOP(&input.Predecessor_WOP)
 	predecessorDB.PredecessorPointersEncoding = input.PredecessorPointersEncoding
 
-	query = db.Model(&predecessorDB).Updates(predecessorDB)
-	if query.Error != nil {
+	db, _ = db.Model(&predecessorDB)
+	_, err = db.Updates(predecessorDB)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -343,7 +344,7 @@ func (controller *Controller) DeletePredecessor(c *gin.Context) {
 
 	// Get model if exist
 	var predecessorDB orm.PredecessorDB
-	if err := db.First(&predecessorDB, c.Param("id")).Error; err != nil {
+	if _, err := db.First(&predecessorDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -353,7 +354,8 @@ func (controller *Controller) DeletePredecessor(c *gin.Context) {
 	}
 
 	// with gorm.Model field, default delete is a soft delete. Unscoped() force delete
-	db.Unscoped().Delete(&predecessorDB)
+	db.Unscoped()
+	db.Delete(&predecessorDB)
 
 	// get an instance (not staged) from DB instance, and call callback function
 	predecessorDeleted := new(models.Predecessor)

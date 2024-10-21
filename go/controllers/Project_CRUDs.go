@@ -70,12 +70,12 @@ func (controller *Controller) GetProjects(c *gin.Context) {
 	}
 	db := backRepo.BackRepoProject.GetDB()
 
-	query := db.Find(&projectDBs)
-	if query.Error != nil {
+	_, err := db.Find(&projectDBs)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -151,12 +151,12 @@ func (controller *Controller) PostProject(c *gin.Context) {
 	projectDB.ProjectPointersEncoding = input.ProjectPointersEncoding
 	projectDB.CopyBasicFieldsFromProject_WOP(&input.Project_WOP)
 
-	query := db.Create(&projectDB)
-	if query.Error != nil {
+	_, err = db.Create(&projectDB)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -205,7 +205,7 @@ func (controller *Controller) GetProject(c *gin.Context) {
 
 	// Get projectDB in DB
 	var projectDB orm.ProjectDB
-	if err := db.First(&projectDB, c.Param("id")).Error; err != nil {
+	if _, err := db.First(&projectDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -264,13 +264,13 @@ func (controller *Controller) UpdateProject(c *gin.Context) {
 	var projectDB orm.ProjectDB
 
 	// fetch the project
-	query := db.First(&projectDB, c.Param("id"))
+	_, err := db.First(&projectDB, c.Param("id"))
 
-	if query.Error != nil {
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -279,12 +279,13 @@ func (controller *Controller) UpdateProject(c *gin.Context) {
 	projectDB.CopyBasicFieldsFromProject_WOP(&input.Project_WOP)
 	projectDB.ProjectPointersEncoding = input.ProjectPointersEncoding
 
-	query = db.Model(&projectDB).Updates(projectDB)
-	if query.Error != nil {
+	db, _ = db.Model(&projectDB)
+	_, err = db.Updates(projectDB)
+	if err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
-		returnError.Body.Message = query.Error.Error()
-		log.Println(query.Error.Error())
+		returnError.Body.Message = err.Error()
+		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, returnError.Body)
 		return
 	}
@@ -343,7 +344,7 @@ func (controller *Controller) DeleteProject(c *gin.Context) {
 
 	// Get model if exist
 	var projectDB orm.ProjectDB
-	if err := db.First(&projectDB, c.Param("id")).Error; err != nil {
+	if _, err := db.First(&projectDB, c.Param("id")); err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -353,7 +354,8 @@ func (controller *Controller) DeleteProject(c *gin.Context) {
 	}
 
 	// with gorm.Model field, default delete is a soft delete. Unscoped() force delete
-	db.Unscoped().Delete(&projectDB)
+	db.Unscoped()
+	db.Delete(&projectDB)
 
 	// get an instance (not staged) from DB instance, and call callback function
 	projectDeleted := new(models.Project)
