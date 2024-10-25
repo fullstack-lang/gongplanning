@@ -10,8 +10,12 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/fullstack-lang/gongplanning/go/db"
 	"github.com/fullstack-lang/gongplanning/go/models"
+
+	/* THIS IS REMOVED BY GONG COMPILER IF TARGET IS gorm
 	"github.com/fullstack-lang/gongplanning/go/orm/dbgorm"
+	THIS IS REMOVED BY GONG COMPILER IF TARGET IS gorm */
 
 	"github.com/tealeg/xlsx/v3"
 )
@@ -38,11 +42,17 @@ type BackRepoStruct struct {
 
 func NewBackRepo(stage *models.StageStruct, filename string) (backRepo *BackRepoStruct) {
 
-	dbWrapper := dbgorm.NewDBWrapper(filename, "github_com_fullstack_lang_gongplanning_go",
+	var db db.DBInterface
+
+	db = NewDBLite()
+
+	/* THIS IS REMOVED BY GONG COMPILER IF TARGET IS gorm
+	db = dbgorm.NewDBWrapper(filename, "github_com_fullstack_lang_gongplanning_go",
 		&PredecessorDB{},
 		&ProjectDB{},
 		&TaskDB{},
 	)
+	THIS IS REMOVED BY GONG COMPILER IF TARGET IS gorm */
 
 	backRepo = new(BackRepoStruct)
 
@@ -52,7 +62,7 @@ func NewBackRepo(stage *models.StageStruct, filename string) (backRepo *BackRepo
 		Map_PredecessorDBID_PredecessorDB:  make(map[uint]*PredecessorDB, 0),
 		Map_PredecessorPtr_PredecessorDBID: make(map[*models.Predecessor]uint, 0),
 
-		db:    dbWrapper,
+		db:    db,
 		stage: stage,
 	}
 	backRepo.BackRepoProject = BackRepoProjectStruct{
@@ -60,7 +70,7 @@ func NewBackRepo(stage *models.StageStruct, filename string) (backRepo *BackRepo
 		Map_ProjectDBID_ProjectDB:  make(map[uint]*ProjectDB, 0),
 		Map_ProjectPtr_ProjectDBID: make(map[*models.Project]uint, 0),
 
-		db:    dbWrapper,
+		db:    db,
 		stage: stage,
 	}
 	backRepo.BackRepoTask = BackRepoTaskStruct{
@@ -68,7 +78,7 @@ func NewBackRepo(stage *models.StageStruct, filename string) (backRepo *BackRepo
 		Map_TaskDBID_TaskDB:  make(map[uint]*TaskDB, 0),
 		Map_TaskPtr_TaskDBID: make(map[*models.Task]uint, 0),
 
-		db:    dbWrapper,
+		db:    db,
 		stage: stage,
 	}
 

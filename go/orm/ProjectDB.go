@@ -163,7 +163,7 @@ func (backRepoProject *BackRepoProjectStruct) CommitDeleteInstance(id uint) (Err
 	// project is not staged anymore, remove projectDB
 	projectDB := backRepoProject.Map_ProjectDBID_ProjectDB[id]
 	db, _ := backRepoProject.db.Unscoped()
-	_, err := db.Delete(&projectDB)
+	_, err := db.Delete(projectDB)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -241,7 +241,7 @@ func (backRepoProject *BackRepoProjectStruct) CommitPhaseTwoInstance(backRepo *B
 				append(projectDB.ProjectPointersEncoding.Tasks, int(taskAssocEnd_DB.ID))
 		}
 
-		_, err := backRepoProject.db.Save(&projectDB)
+		_, err := backRepoProject.db.Save(projectDB)
 		if err != nil {
 			log.Fatal(err)
 		}

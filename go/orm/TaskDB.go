@@ -156,7 +156,7 @@ func (backRepoTask *BackRepoTaskStruct) CommitDeleteInstance(id uint) (Error err
 	// task is not staged anymore, remove taskDB
 	taskDB := backRepoTask.Map_TaskDBID_TaskDB[id]
 	db, _ := backRepoTask.db.Unscoped()
-	_, err := db.Delete(&taskDB)
+	_, err := db.Delete(taskDB)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -234,7 +234,7 @@ func (backRepoTask *BackRepoTaskStruct) CommitPhaseTwoInstance(backRepo *BackRep
 				append(taskDB.TaskPointersEncoding.Predecessors, int(predecessorAssocEnd_DB.ID))
 		}
 
-		_, err := backRepoTask.db.Save(&taskDB)
+		_, err := backRepoTask.db.Save(taskDB)
 		if err != nil {
 			log.Fatal(err)
 		}

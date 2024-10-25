@@ -163,7 +163,7 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) CommitDeleteInstance(id ui
 	// predecessor is not staged anymore, remove predecessorDB
 	predecessorDB := backRepoPredecessor.Map_PredecessorDBID_PredecessorDB[id]
 	db, _ := backRepoPredecessor.db.Unscoped()
-	_, err := db.Delete(&predecessorDB)
+	_, err := db.Delete(predecessorDB)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -235,7 +235,7 @@ func (backRepoPredecessor *BackRepoPredecessorStruct) CommitPhaseTwoInstance(bac
 			predecessorDB.TaskID.Valid = true
 		}
 
-		_, err := backRepoPredecessor.db.Save(&predecessorDB)
+		_, err := backRepoPredecessor.db.Save(predecessorDB)
 		if err != nil {
 			log.Fatal(err)
 		}
